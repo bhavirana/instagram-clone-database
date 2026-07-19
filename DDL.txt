@@ -1,0 +1,222 @@
+Schema Creation 
+
+CREATE SCHEMA IF NOT EXISTS instagram_db; 
+SET search_path TO instagram_db; 
+
+Tables
+
+ -- 1. Account Types 
+CREATE TABLE Account_Types ( 
+    type_id INTEGER PRIMARY KEY, 
+    type_name VARCHAR(20) NOT NULL UNIQUE 
+); 
+
+ -- 2. Audience Type 
+CREATE TABLE Audience_Type ( 
+    audience_type_id INTEGER PRIMARY KEY, 
+    audience_type_name VARCHAR(20) NOT NULL UNIQUE 
+); 
+
+ -- 3. Call Types 
+CREATE TABLE Call_Types ( 
+    call_type_id INTEGER PRIMARY KEY, 
+    type_name VARCHAR(20) NOT NULL UNIQUE 
+); 
+
+ -- 4. Message Types 
+CREATE TABLE Message_Types ( 
+    message_type_id INTEGER PRIMARY KEY, 
+    type_name VARCHAR(20) NOT NULL UNIQUE 
+); 
+
+ -- 5. Target Type (for Likes: post/reel/story) 
+CREATE TABLE Target_Type ( 
+    target_type_id INTEGER PRIMARY KEY, 
+    target_type_name VARCHAR(20) NOT NULL UNIQUE 
+); 
+
+ -- 6. Music Library 
+CREATE TABLE Music_Library ( 
+    music_id INTEGER PRIMARY KEY, 
+    song_title VARCHAR(100) NOT NULL, 
+    artist_name VARCHAR(100) NOT NULL, 
+    audio_url  VARCHAR(255) NOT NULL, 
+    duration_sec INTEGER NOT NULL CHECK (duration_sec > 0) 
+);
+ -- 7. Users 
+CREATE TABLE Users ( 
+    user_id INTEGER PRIMARY KEY, 
+    username VARCHAR(50) NOT NULL UNIQUE, 
+    email VARCHAR(25) NOT NULL UNIQUE, 
+    password VARCHAR(255) NOT NULL, 
+    account_type_id INTEGER NOT NULL, 
+    is_verified BOOLEAN NOT NULL DEFAULT FALSE, 
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    FOREIGN KEY (account_type_id) REFERENCES Account_Types(type_id) 
+        ON DELETE RESTRICT ON UPDATE CASCADE 
+);
+
+-- 8. Posts 
+CREATE TABLE Posts ( 
+    post_id INTEGER PRIMARY KEY, 
+    user_id INTEGER NOT NULL, 
+    caption TEXT, 
+    location_name VARCHAR(75), 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE 
+); 
+
+ -- 9. Post_Media (multivalued: a post can have multiple media) 
+CREATE TABLE Post_Media ( 
+    media_id INTEGER PRIMARY KEY, 
+    post_id INTEGER NOT NULL, 
+    media_url VARCHAR(255) NOT NULL, 
+    position INT NOT NULL CHECK (position >= 0), 
+    FOREIGN KEY (post_id) REFERENCES Posts(post_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE 
+); 
+
+ -- 10. Reels 
+CREATE TABLE Reels ( 
+    reel_id INTEGER PRIMARY KEY, 
+    user_id INTEGER NOT NULL, 
+    video_url VARCHAR(255) NOT NULL, 
+    music_id INTEGER, 
+    total_views INTEGER NOT NULL DEFAULT 0 CHECK (total_views >= 0), 
+    is_remixable BOOLEAN NOT NULL DEFAULT TRUE, 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (music_id) REFERENCES Music_Library(music_id) 
+        ON DELETE SET NULL ON UPDATE CASCADE 
+); 
+
+ -- 11. Stories 
+CREATE TABLE Stories ( 
+    story_id INTEGER PRIMARY KEY, 
+    user_id INTEGER NOT NULL, 
+    media_url VARCHAR(255) NOT NULL, 
+    expires_at TIMESTAMP NOT NULL, 
+    audience_type_id INT, 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (audience_type_id) REFERENCES Audience_Type(audience_type_id) 
+        ON DELETE SET NULL ON UPDATE CASCADE 
+); 
+
+ -- 12. Comments (self-referencing for threaded replies) 
+CREATE TABLE Comments ( 
+    comment_id INTEGER PRIMARY KEY, 
+    post_id INTEGER NOT NULL, 
+    user_id INTEGER NOT NULL, 
+    content TEXT, 
+    parent_comment_id INT, 
+    FOREIGN KEY (parent_comment_id) REFERENCES Comments(comment_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE 
+); 
+
+ -- 13. Highlights 
+CREATE TABLE Highlights ( 
+    highlight_id INTEGER PRIMARY KEY, 
+    user_id INTEGER NOT NULL, 
+    name VARCHAR(50) NOT NULL, 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE 
+); 
+
+ -- 14. Likes (polymorphic: can like posts, reels, or stories) 
+CREATE TABLE Likes ( 
+    like_id INTEGER PRIMARY KEY, 
+    user_id INTEGER NOT NULL, 
+    target_id INTEGER NOT NULL, 
+    target_type_id INTEGER NOT NULL, 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (target_type_id) REFERENCES Target_Type(target_type_id) 
+        ON DELETE RESTRICT ON UPDATE CASCADE, 
+    UNIQUE (user_id, target_id, target_type_id) 
+); 
+
+ -- 15. Chats (messages between users) 
+CREATE TABLE Chats ( 
+    chat_id INTEGER PRIMARY KEY, 
+    sender_id INTEGER NOT NULL, 
+    receiver_id INTEGER NOT NULL, 
+    message_content VARCHAR(255), 
+    is_read BOOLEAN NOT NULL DEFAULT FALSE, 
+    send_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    message_type_id INTEGER, 
+    FOREIGN KEY (sender_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (receiver_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (message_type_id) REFERENCES Message_Types(message_type_id) 
+        ON DELETE SET NULL ON UPDATE CASCADE 
+); 
+
+ -- 16. Calls 
+CREATE TABLE Calls ( 
+    call_id INTEGER PRIMARY KEY, 
+    caller_id INTEGER NOT NULL, 
+    receiver_id INTEGER NOT NULL, 
+    call_type_id INTEGER NOT NULL, 
+    started_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    duration_seconds INTEGER CHECK (duration_seconds >= 0), 
+    status VARCHAR(20) NOT NULL DEFAULT 'initiated', 
+    FOREIGN KEY (caller_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (receiver_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (call_type_id) REFERENCES Call_Types(call_type_id) 
+        ON DELETE RESTRICT ON UPDATE CASCADE 
+); 
+
+-- 17. Followers (M:N Users ↔ Users) 
+CREATE TABLE Followers ( 
+    follower_id INTEGER NOT NULL, 
+    following_id INTEGER NOT NULL, 
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (follower_id, following_id), 
+    FOREIGN KEY (follower_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (following_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    CHECK (follower_id <> following_id) 
+); 
+
+ -- 18. Blocked_Accounts 
+CREATE TABLE Blocked_Accounts ( 
+    blocker_id INTEGER NOT NULL, 
+    blocked_id INTEGER NOT NULL, 
+    block_date TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (blocker_id, blocked_id), 
+    FOREIGN KEY (blocker_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (blocked_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    CHECK (blocker_id <> blocked_id) 
+); 
+
+ -- 19. Close_Friends_List 
+CREATE TABLE Close_Friends_List ( 
+    user_id INTEGER NOT NULL, 
+    friend_id INTEGER NOT NULL, 
+    added_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (user_id, friend_id), 
+    FOREIGN KEY (user_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (friend_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    CHECK (user_id <> friend_id) 
+); 
+
+ -- 20. Story_Views 
+CREATE TABLE Story_Views ( 
+    story_id INTEGER NOT NULL, 
+    viewer_id INTEGER NOT NULL, 
+    view_time TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP, 
+    PRIMARY KEY (story_id, viewer_id), 
+    FOREIGN KEY (story_id) REFERENCES Stories(story_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE, 
+    FOREIGN KEY (viewer_id) REFERENCES Users(user_id) 
+        ON DELETE CASCADE ON UPDATE CASCADE 
+); 

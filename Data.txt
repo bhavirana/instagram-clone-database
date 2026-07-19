@@ -1,0 +1,463 @@
+-- 1. Account Types
+INSERT INTO Account_Types (type_id, type_name) VALUES
+  (1, 'Private'), (2, 'Business'), (3, 'Creator'), (4, 'Public');
+
+-- 2. Audience Types
+INSERT INTO Audience_type (audience_type_id, audience_type_name) VALUES
+  (1, 'Public'), (2, 'Private'), (3, 'Close Friends');
+
+-- 3. target_type
+INSERT INTO target_type (target_type_id, target_type_name) VALUES
+  (1, 'post'), (2, 'reel'), (3, 'comment');
+
+-- 4. Call Types
+INSERT INTO Call_Types (call_type_id, type_name) VALUES
+  (1, 'Audio'), (2, 'Video');
+
+-- 5. Message Types
+INSERT INTO Message_Types (message_type_id, type_name) VALUES
+  (1, 'Text'), (2, 'Image'), (3, 'Voice'), (4, 'Video');
+
+-- 6. Music Library
+INSERT INTO Music_Library (music_id, song_title, artist_name, audio_url, duration_sec) VALUES
+  (1, 'Saudebazi',  'Javed Ali',   'https://audio.ig/1.mp3', 200),
+  (2, 'Shape of You',     'Ed Sheeran',   'https://audio.ig/2.mp3', 234),
+  (3, 'Kesariya',         'Arijit Singh', 'https://audio.ig/3.mp3', 280),
+  (4, 'Thodi Der',       'Shreya Ghoshal',     'https://audio.ig/4.mp3', 203),
+  (5, 'Levitating',       'Dua Lipa',     'https://audio.ig/5.mp3', 203),
+  (6, 'Khalasi',       'Aditya Gadhvi',     'https://audio.ig/6.mp3', 205);
+
+ -- 7. Users
+INSERT INTO Users (user_id, username, email, password, account_type_id, is_verified, created_at) VALUES
+  (1, 'purvi_nakum',    'purvii@email.com',   'pass1', 4, FALSE,  '2020-01-10 10:00:00'),
+  (2, 'sejalpatel01',  'sejalpatel@email.com',   'pass2', 1, FALSE,  '2021-02-15 12:00:00'),
+  (3, 'bhavi_1107',     'bhavi_2006@email.com',    'pass3', 4, FALSE, '2023-03-20 09:00:00'),
+  (4, 'ptl_rashi',     'rashi@email.com',    'pass4', 1, FALSE, '2024-04-05 11:00:00'),
+  (5, 'aarushi_shah_71',  'aarushi_shah@email.com',   'pass5', 1, FALSE,  '2023-05-11 14:00:00'),
+  (6, 'femm.rathod', 'feminarathod@email.com',   'pass6', 1, FALSE, '2020-06-18 08:00:00'),
+  (7, 'ommm',    'om_kotadiya@email.com',   'pass7', 1, FALSE,  '2022-07-22 16:00:00'),
+  (8, 'prince_patel',  'prince@email.com',  'pass8', 1, FALSE, '2023-08-30 09:00:00'),
+  (9, 'virat.kohli',  'virat_kohli_18@email.com',  'pass9', 3, TRUE, '2012-09-27 03:00:00'),
+  (10, 'aliaabhatt',  'aliabhatt@email.com',  'pass10', 3, TRUE, '2014-04-11 05:00:00'),
+  (11, 'narendramodi',  'narendra_modi@email.com',  'pass11', 3, TRUE, '2014-01-19 16:00:00'),
+  (12, 'kartiksharmaa',  'kartiksharma@email.com',  'pass12', 1, FALSE, '2006-08-20 14:00:00'),
+  (13, 'milann',  'milan_nakum@email.com',  'pass13', 4, FALSE, '2019-04-21 23:00:00'),
+  (14, 'vidhi_3002',  'vidhir@email.com',  'pass14', 1, FALSE, '2021-03-02 03:00:00'),
+  (15, 'synapsedaiict',  'synapse_daiict@email.com',  'pass15', 2, TRUE, '2006-05-30 12:00:00');
+
+INSERT INTO Followers (follower_id, following_id, created_at) VALUES
+-- Purvi is followed by friends only
+(2, 1, '2023-03-01'),
+(3, 1, '2023-03-02'),
+(4, 1, '2023-03-03'),
+(5, 1, '2023-03-04'),
+(6, 1, '2023-03-05'),
+(8, 1, '2023-03-06'),
+(13, 1, '2023-03-07'),
+
+-- Purvi follows her friends
+(1, 2, '2023-03-08'),
+(1, 3, '2023-03-09'),
+(1, 5, '2023-03-10'),
+(1, 13, '2023-03-11'),
+(1, 14, '2023-03-12'),
+
+-- Friend-to-friend follows
+(3, 2, '2023-03-13'),
+(2, 3, '2023-03-14'),
+(4, 2, '2023-03-15'),
+(7, 5, '2023-03-16'),
+(5, 7, '2023-03-17'),
+(12, 5, '2023-03-18'),
+(14, 2, '2023-03-19'),
+(6, 4, '2023-03-20'),
+(8, 6, '2023-03-21'),
+
+-- Users follow verified/public figures
+(1, 9, '2023-03-22'),   -- Purvi follows Virat
+(2, 9, '2023-03-23'),
+(3, 10, '2023-03-24'),  -- Bhavi follows Alia
+(4, 11, '2023-03-25'),  -- Rashi follows Modi
+(5, 9, '2023-03-26'),
+(6, 10, '2023-03-27'),
+(7, 11, '2023-03-28'),
+(8, 9, '2023-03-29'),
+(12, 10, '2023-03-30'),
+(13, 11, '2023-03-31'),
+(14, 9, '2023-04-01'),
+
+-- Users follow Synapse page
+(1, 15, '2023-04-02'),
+(2, 15, '2023-04-03'),
+(3, 15, '2023-04-04'),
+(4, 15, '2023-04-05'),
+(5, 15, '2023-04-06'),
+
+-- Synapse follows some students / creators
+(15, 1, '2023-04-07'),
+(15, 9, '2023-04-08'),
+(15, 10, '2023-04-09');
+
+INSERT INTO Posts (post_id, user_id, caption, location_name) VALUES
+-- Normal users
+(1, 1, 'Loving the sunset view!', 'Mumbai'),
+(2, 2, 'My photography setup 📷', 'Delhi'),
+(3, 1, 'New project launched! 🚀',  'Bangalore'),
+(4, 3, 'Business meeting vibes 💼','Mumbai'),
+(5, 4, 'My latest artwork 🎨', 'Pune'),
+(6, 5, 'Live music tonight! 🎸', 'Hyderabad'),
+(7, 7, 'Morning workout done 💪',  'Chennai'),
+(8, 8, 'Homemade pasta recipe 🍝', 'Kolkata'),
+(9, 12, 'First post here 😄', 'Ahmedabad'),
+(10, 13, 'Throwback to Goa trip 🌊', 'Goa'),
+(11, 14, 'Study grind never stops 📚', 'Surat'),
+
+-- Verified users (realistic content)
+(12, 9,  'Training hard for the next match 💪🇮🇳', 'Mumbai'),
+(13, 10, 'Behind the scenes from my new film 🎬✨', 'Mumbai'),
+(14, 11, 'Attended an important meeting today 🇮🇳', 'New Delhi'),
+
+-- Synapse (business account)
+(15, 15, 'Get ready for Synapse 2023 🔥', 'DAIICT');
+
+INSERT INTO Post_Media (media_id, post_id, media_url, position) VALUES
+(1, 1, 'https://img.ig/post1a.jpg', 1),
+(2, 1, 'https://img.ig/post1b.jpg', 2),
+(3, 2, 'https://img.ig/post2a.jpg', 1),
+(4, 3, 'https://img.ig/post3a.jpg', 1),
+(5, 4, 'https://img.ig/post4a.jpg', 1),
+(6, 5, 'https://img.ig/post5a.jpg', 1),
+(7, 5, 'https://img.ig/post5b.jpg', 2),
+(8, 5, 'https://img.ig/post5c.jpg', 3),
+(9, 6, 'https://img.ig/post6a.jpg', 1),
+(10, 7, 'https://img.ig/post7a.jpg', 1),
+(11, 8, 'https://img.ig/post8a.jpg', 1),
+(12, 9, 'https://img.ig/post9a.jpg', 1),
+(13, 10, 'https://img.ig/post10a.jpg', 1),
+(14, 10, 'https://img.ig/post10b.jpg', 2),
+(15, 11, 'https://img.ig/post11a.jpg', 1),
+
+-- Verified users (multiple media looks realistic)
+(16, 12, 'https://img.ig/post12a.jpg', 1),
+(17, 12, 'https://img.ig/post12b.jpg', 2),
+(18, 13, 'https://img.ig/post13a.jpg', 1),
+(19, 14, 'https://img.ig/post14a.jpg', 1),
+(20, 14, 'https://img.ig/post14b.jpg', 2),
+
+-- Synapse (event posts usually multiple images)
+(21, 15, 'https://img.ig/post15a.jpg', 1),
+(22, 15, 'https://img.ig/post15b.jpg', 2),
+(23, 15, 'https://img.ig/post15c.jpg', 3);
+
+INSERT INTO Comments (comment_id, post_id, user_id, content, parent_comment_id) VALUES
+
+-- Post 1 
+(1, 1, 2, 'Beautiful shot!', NULL),
+(2, 1, 3, 'Love this! 😍', NULL),
+(3, 1, 4, 'Which camera?', NULL),
+(4, 1, 5, 'Sony A7, I think!', 3),
+
+-- Post 2
+(5, 2, 1, 'Great setup!', NULL),
+
+-- Post 3
+(6, 3, 2, 'Congrats on the launch!', NULL),
+
+-- Post 5
+(7, 5, 6, 'Stunning artwork!', NULL),
+
+-- Post 7
+(8, 7, 2, 'Motivation unlocked!', NULL),
+
+-- Post 9 (user 12)
+(9, 9, 1, 'Welcome to Instagram 😄', NULL),
+(10, 9, 2, 'Nice start!', NULL),
+
+-- Post 10 (Goa trip)
+(11, 10, 3, 'Goa vibes 🔥', NULL),
+(12, 10, 4, 'Looks amazing!', NULL),
+(13, 10, 5, 'When did you go?', NULL),
+(14, 10, 13, 'Last summer 😄', 13),
+
+-- Post 12 (Virat)
+(15, 12, 1, 'King 👑', NULL),
+(16, 12, 2, 'Legend!', NULL),
+(17, 12, 5, 'Always inspiring 💪', NULL),
+
+-- Post 13 (Alia)
+(18, 13, 3, 'Can’t wait for this movie!', NULL),
+(19, 13, 6, 'So excited 🔥', NULL),
+
+-- Post 14 (Modi)
+(20, 14, 4, 'Great leadership 🙏', NULL),
+(21, 14, 7, 'Respect 🇮🇳', NULL),
+
+-- Post 15 (Synapse)
+(22, 15, 1, 'Excited for this! 🔥', NULL),
+(23, 15, 2, 'Best fest incoming 😍', NULL),
+(24, 15, 3, 'Waitingggg!', NULL);
+
+INSERT INTO Likes (like_id, user_id, target_id, target_type_id) VALUES
+
+-- Likes on Post 1 
+(1, 2, 1, 1), (2, 3, 1, 1), (3, 4, 1, 1), (4, 5, 1, 1),
+(5, 6, 1, 1), (6, 7, 1, 1), (7, 8, 1, 1), (8, 13, 1, 1),
+
+-- Likes on Post 2
+(9, 1, 2, 1), (10, 3, 2, 1), (11, 4, 2, 1),
+
+-- Likes on Post 3
+(12, 2, 3, 1), (13, 5, 3, 1),
+
+-- Likes on Post 5
+(14, 1, 5, 1), (15, 2, 5, 1), (16, 6, 5, 1),
+
+-- Likes on Post 9 (new user)
+(17, 1, 9, 1), (18, 2, 9, 1),
+
+-- Likes on Post 10 (Goa)
+(19, 3, 10, 1), (20, 4, 10, 1), (21, 5, 10, 1),
+
+-- Likes on Post 12 (Virat → many likes)
+(22, 1, 12, 1), (23, 2, 12, 1), (24, 3, 12, 1),
+(25, 4, 12, 1), (26, 5, 12, 1), (27, 6, 12, 1),
+(28, 7, 12, 1), (29, 8, 12, 1), (30, 12, 12, 1),
+(31, 13, 12, 1), (32, 14, 12, 1),
+
+-- Likes on Post 13 (Alia)
+(33, 1, 13, 1), (34, 3, 13, 1), (35, 5, 13, 1),
+
+-- Likes on Post 14 (Modi)
+(36, 2, 14, 1), (37, 4, 14, 1), (38, 7, 14, 1),
+
+-- Likes on Post 15 (Synapse)
+(39, 1, 15, 1), (40, 2, 15, 1), (41, 3, 15, 1),
+(42, 4, 15, 1), (43, 5, 15, 1), (44, 6, 15, 1);
+
+INSERT INTO Reels (reel_id, user_id, video_url, music_id, total_views, is_remixable) VALUES
+(1, 1, 'https://reel.ig/r1.mp4', 1, 3200, TRUE),
+(2, 2, 'https://reel.ig/r2.mp4', 3, 4100, TRUE),
+(3, 5, 'https://reel.ig/r3.mp4', 2, 6800, FALSE),
+(4, 7, 'https://reel.ig/r4.mp4', 1, 2900, TRUE),
+(5, 4, 'https://reel.ig/r5.mp4', 4, 3700, TRUE),
+(6, 13, 'https://reel.ig/r6.mp4', 2, 5400, TRUE),
+(7, 14, 'https://reel.ig/r7.mp4', 3, 2600, FALSE),
+
+-- Verified users
+(8, 9, 'https://reel.ig/r8.mp4', 1, 185000, TRUE),
+(9, 10, 'https://reel.ig/r9.mp4', 4, 142000, TRUE),
+(10, 11, 'https://reel.ig/r10.mp4', 2, 210000, FALSE),
+
+-- Business account
+(11, 15, 'https://reel.ig/r11.mp4', 3, 48000, TRUE);
+
+INSERT INTO Stories (story_id, user_id, media_url, expires_at, audience_type_id) VALUES
+(1, 1, 'https://story.ig/s1.jpg', NOW() + INTERVAL '12 hours', 1),
+(2, 2, 'https://story.ig/s2.jpg', NOW() + INTERVAL '8 hours',  1),
+(3, 3, 'https://story.ig/s3.jpg', NOW() + INTERVAL '4 hours',  2),
+(4, 5, 'https://story.ig/s4.jpg', NOW() - INTERVAL '1 hour',   1),
+(5, 7, 'https://story.ig/s5.jpg', NOW() + INTERVAL '6 hours', 1),
+(6, 8, 'https://story.ig/s6.jpg', NOW() + INTERVAL '10 hours',1),
+
+-- Verified users
+(7, 9,  'https://story.ig/s7.jpg', NOW() + INTERVAL '12 hours', 1),
+(8, 10, 'https://story.ig/s8.jpg', NOW() + INTERVAL '12 hours', 1),
+(9, 11, 'https://story.ig/s9.jpg', NOW() + INTERVAL '12 hours', 1),
+
+-- Synapse (event promotion)
+(10, 15, 'https://story.ig/s10.jpg', NOW() + INTERVAL '24 hours', 1);
+
+INSERT INTO Story_views (story_id, viewer_id, view_time) VALUES
+
+-- Story 1 
+(1, 2, '2024-01-01 10:05:00'),
+(1, 3, '2024-01-01 10:10:00'),
+(1, 4, '2024-01-01 10:15:00'),
+(1, 5, '2024-01-01 10:20:00'),
+(1, 8, '2024-01-01 10:25:00'),
+
+-- Story 2
+(2, 1, '2024-01-01 10:30:00'),
+(2, 3, '2024-01-01 10:35:00'),
+(2, 4, '2024-01-01 10:40:00'),
+
+-- Story 3 (Close friends)
+(3, 1, '2024-01-01 10:45:00'),
+(3, 2, '2024-01-01 10:50:00'),
+
+-- Story 5
+(5, 1, '2024-01-01 11:00:00'),
+(5, 2, '2024-01-01 11:05:00'),
+(5, 6, '2024-01-01 11:10:00'),
+
+-- Story 6
+(6, 3, '2024-01-01 11:15:00'),
+(6, 5, '2024-01-01 11:20:00'),
+
+-- Story 7 (Virat → many views)
+(7, 1, '2024-01-01 11:25:00'),
+(7, 2, '2024-01-01 11:26:00'),
+(7, 3, '2024-01-01 11:27:00'),
+(7, 4, '2024-01-01 11:28:00'),
+(7, 5, '2024-01-01 11:29:00'),
+(7, 6, '2024-01-01 11:30:00'),
+(7, 7, '2024-01-01 11:31:00'),
+(7, 8, '2024-01-01 11:32:00'),
+
+-- Story 8 (Alia)
+(8, 1, '2024-01-01 11:35:00'),
+(8, 3, '2024-01-01 11:36:00'),
+(8, 5, '2024-01-01 11:37:00'),
+
+-- Story 9 (Modi)
+(9, 2, '2024-01-01 11:40:00'),
+(9, 4, '2024-01-01 11:41:00'),
+(9, 7, '2024-01-01 11:42:00'),
+
+-- Story 10 (Synapse)
+(10, 1, '2024-01-01 11:45:00'),
+(10, 2, '2024-01-01 11:46:00'),
+(10, 3, '2024-01-01 11:47:00'),
+(10, 4, '2024-01-01 11:48:00'),
+(10, 5, '2024-01-01 11:49:00');
+
+INSERT INTO Chats (chat_id, sender_id, receiver_id, message_content, is_read, send_at, message_type_id) VALUES
+
+-- Purvi ↔ Sejal
+(1, 1, 2, 'Hey Sejal! Loved your photos 📸', TRUE,  '2024-01-01 09:00:00', 1),
+(2, 2, 1, 'Thank you Purvi! 😊',             TRUE,  '2024-01-01 09:05:00', 1),
+
+-- Bhavi → Purvi
+(3, 3, 1, 'Are you coming to college today?', FALSE, '2024-01-01 10:00:00', 1),
+(4, 1, 3, 'Yes, see you there!',              FALSE, '2024-01-01 10:05:00', 1),
+
+-- Rashi → Sejal
+(5, 4, 2, 'Loved your latest reel 🔥',        FALSE, '2024-01-01 11:00:00', 1),
+
+-- Aarushi ↔ Om
+(6, 5, 7, 'Gym tomorrow?',                    FALSE, '2024-01-01 12:00:00', 1),
+(7, 7, 5, 'Yes, 7 AM 💪',                     FALSE, '2024-01-01 12:05:00', 1),
+
+-- Users chatting about Synapse
+(8, 1, 3, 'Are you going to Synapse?',        TRUE,  '2024-01-01 13:00:00', 1),
+(9, 3, 1, 'Of course! 🔥',                    TRUE,  '2024-01-01 13:05:00', 1),
+
+-- Fan messages to celebrities (realistic behavior)
+(10, 1, 9,  'Big fan! ❤️',                    FALSE, '2024-01-01 14:00:00', 1),
+(11, 2, 10, 'Loved your movie! 🎬',           FALSE, '2024-01-01 14:05:00', 1),
+
+-- Group-like interaction (1-1 but different users)
+(12, 6, 4, 'Assignment done?',                TRUE,  '2024-01-01 15:00:00', 1),
+(13, 4, 6, 'Almost 😅',                       TRUE,  '2024-01-01 15:05:00', 1),
+
+-- Synapse replying to user (business interaction)
+(14, 15, 1, 'Stay tuned for updates!',        FALSE, '2024-01-01 16:00:00', 1);
+
+INSERT INTO Calls (call_id, caller_id, receiver_id, call_type_id, started_at, duration_seconds, status) VALUES
+
+-- Friends calls
+(1, 1, 2, 2, '2024-01-02 09:00:00', 120,  'completed'),
+(2, 3, 1, 1, '2024-01-02 11:00:00', 300,  'completed'),
+(3, 5, 7, 2, '2024-01-03 14:00:00', 0,    'missed'),
+(4, 2, 4, 1, '2024-01-03 16:00:00', 180,  'completed'),
+(5, 7, 1, 2, '2024-01-04 10:00:00', 600,  'completed'),
+
+-- More student interactions
+(6, 6, 4, 1, '2024-01-04 12:00:00', 240,  'completed'),
+(7, 8, 2, 2, '2024-01-04 13:00:00', 90,   'completed'),
+(8, 12, 5, 1, '2024-01-04 15:00:00', 60,  'completed'),
+
+-- Missed / rejected calls
+(9, 14, 1, 2, '2024-01-05 09:00:00', 0,   'missed'),
+(10, 13, 3, 1, '2024-01-05 10:00:00', 0,  'rejected'),
+
+-- Calls involving Synapse (event coordination)
+(11, 15, 1, 1, '2024-01-05 11:00:00', 200, 'completed'),
+(12, 1, 15, 2, '2024-01-05 12:00:00', 150, 'completed'),
+
+-- Fans trying to reach celebrities (mostly missed 😄)
+(13, 1, 9, 1, '2024-01-05 13:00:00', 0, 'missed'),
+(14, 2, 10, 2, '2024-01-05 13:30:00', 0, 'missed'),
+(15, 3, 11, 1, '2024-01-05 14:00:00', 0, 'missed');
+
+INSERT INTO Highlights (highlight_id, user_id, name) VALUES
+
+-- Purvi 
+(1, 1, 'Travel'),
+(2, 1, 'Friends'),
+(3, 1, 'College'),
+
+-- Sejal
+(4, 2, 'Photography'),
+(5, 2, 'Moments'),
+
+-- Bhavi
+(6, 3, 'Memories'),
+
+-- Aarushi
+(7, 5, 'Music Gigs'),
+(8, 5, 'Concerts'),
+
+-- Om
+(9, 7, 'Fitness'),
+(10, 7, 'Workout'),
+
+-- Other normal users
+(11, 13, 'Trips'),
+(12, 14, 'Study Life'),
+
+-- Verified users (more polished highlights)
+(13, 9, 'Matches'),        -- Virat
+(14, 9, 'Training'),
+
+(15, 10, 'Movies'),        -- Alia
+(16, 10, 'Behind Scenes'),
+
+(17, 11, 'Events'),        -- Modi
+(18, 11, 'Speeches'),
+
+-- Synapse (business account)
+(19, 15, 'Synapse 2023'),
+(20, 15, 'Events');
+
+INSERT INTO Close_Friends_List (user_id, friend_id, added_at) VALUES
+
+-- Purvi's close friends
+(1, 2, '2023-06-01'),
+(1, 3, '2023-06-03'),
+(1, 4, '2023-06-04'),
+(1, 5, '2023-06-05'),
+(1, 13, '2023-06-06'),
+
+-- Mutual friendships
+(2, 1, '2023-06-02'),
+(3, 1, '2023-06-07'),
+
+-- Aarushi & Om (mutual)
+(5, 7, '2023-07-01'),
+(7, 5, '2023-07-02'),
+
+-- Small friend groups
+(2, 4, '2023-07-03'),
+(4, 2, '2023-07-04'),
+
+(3, 5, '2023-07-05'),
+(5, 3, '2023-07-06'),
+
+-- Other users
+(13, 1, '2023-07-07'),
+(14, 2, '2023-07-08');
+
+INSERT INTO Blocked_Accounts (blocker_id, blocked_id, block_date) VALUES
+
+(1, 8, '2024-01-01'),
+(3, 6, '2024-01-02'),
+
+-- More realistic cases
+(2, 7, '2024-01-03'),   -- Sejal blocked Om
+(5, 4, '2024-01-04'),   -- Aarushi blocked Rashi
+(8, 2, '2024-01-05'),   -- Prince blocked Sejal
+
+-- One-sided cases (common)
+(14, 3, '2024-01-06'),  -- Vidhi blocked Bhavi
+(13, 8, '2024-01-07');  -- Milan blocked Prince
